@@ -1,0 +1,127 @@
+<view class="page-container recipes-page">
+
+  <!-- Config Panel -->
+  <view class="config-panel">
+    <view class="config-row">
+      <view class="config-item">
+        <text class="config-label">用餐人数: {{people}}人</text>
+        <slider min="1" max="6" value="{{people}}" block-size="20" activeColor="#4A90D9"
+                bindchange="onPeopleChange"/>
+      </view>
+      <view class="config-item">
+        <text class="config-label">菜品数量: {{dishCount}}道</text>
+        <text class="dish-hint">{{getRecommendedDishes()}}</text>
+        <slider min="1" max="20" value="{{dishCount}}" block-size="20" activeColor="#4A90D9"
+                bindchange="onDishCountChange"/>
+      </view>
+    </view>
+    <view class="config-row">
+      <view class="config-item">
+        <text class="config-label">口味偏好</text>
+        <picker mode="selector" range="{{cuisineOptions}}" bindchange="onCuisineChange">
+          <view class="cuisine-picker">{{cuisinePref}} ▾</view>
+        </picker>
+      </view>
+      <view class="config-item">
+        <text class="config-label">模式</text>
+        <view class="mode-toggle {{strictMode ? 'active' : ''}}" bindtap="toggleMode">
+          <text>{{strictMode ? '🔒 严格模式' : '🌐 灵活模式'}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- Ingredient Picker -->
+    <view class="ing-picker-block">
+      <view class="ing-picker-header" bindtap="toggleIngredientPicker">
+        <text>🥬 选择食材 <text class="ing-picker-count">(已选{{selectedIngredientIds.length > 0 ? selectedIngredientIds.length : '全部'}})</text></text>
+        <text class="ing-picker-arrow">{{showIngredientPicker ? '▲' : '▼'}}</text>
+      </view>
+      <view class="ing-picker-body" wx:if="{{showIngredientPicker}}">
+        <view class="ing-pick-actions">
+          <text bindtap="selectAllIngredients">{{selectedIngredientIds.length === allIngredients.length && allIngredients.length > 0 ? '取消全选' : '全选'}}</text>
+        </view>
+        <view class="ing-pick-grid">
+          <view wx:for="{{allIngredients}}" wx:key="id"
+            class="ing-pick-chip {{selectedIngredientIds.indexOf(item.id) >= 0 ? 'selected' : ''}}"
+            data-id="{{item.id}}" bindtap="toggleIngredient">
+            <text>{{item.emoji}} {{item.name}}</text>
+            <text wx:if="{{selectedIngredientIds.indexOf(item.id) >= 0}}" class="ing-check-mark">✓</text>
+          </view>
+        </view>
+        <view class="ing-pick-empty" wx:if="{{allIngredients.length === 0}}">
+          <text>冰箱还是空的，请先添加食材</text>
+        </view>
+      </view>
+    </view>
+
+    <button class="btn btn-primary generate-btn" bindtap="generateRecipes" disabled="{{loading}}">
+      <text wx:if="{{!loading}}">✨ AI 生成菜谱</text>
+      <text wx:else>正在生成...</text>
+    </button>
+    <view class="no-token-hint" wx:if="{{!hasToken}}" bindtap="goSettings">
+      ⚠️ 请先配置 DeepSeek API Token
+    </view>
+  </view>
+
+  <!-- Saved Toggle -->
+  <view class="section-toggle" bindtap="toggleShowSaved">
+    <text>{{showSaved ? '📋 查看生成结果' : '⭐ 收藏的菜谱 (' + savedRecipes.length + ')'}}</text>
+  </view>
+
+  <!-- Generated Recipes -->
+  <view class="recipe-list" wx:if="{{!showSaved && recipes.length > 0}}">
+    <view wx:for="{{recipes}}" wx:key="index" class="recipe-card"
+          data-index="{{index}}" bindtap="goRecipeDetail">
+      <view class="recipe-header">
+        <text class="recipe-name">{{item.dish_name}}</text>
+        <text class="recipe-difficulty" wx:if="{{item.difficulty}}">{{item.difficulty}}</text>
+      </view>
+      <view class="recipe-ingredients">
+        <view wx:for="{{item.used_ingredients}}" wx:key="name" class="recipe-ing">
+          <text>{{item.emoji}} {{item.name}}</text>
+        </view>
+        <view wx:for="{{item.missing_ingredients}}" wx:key="name" class="recipe-ing missing">
+          <text>{{item.emoji}} {{item.name}} · 需购买</text>
+        </view>
+      </view>
+      <view class="recipe-steps-preview">{{item.instructions}}</view>
+      <view class="recipe-footer" catchtap="preventBubble">
+        <text class="save-star {{item.isSaved ? 'saved' : ''}}" data-index="{{index}}" bindtap="toggleSave">
+          {{item.isSaved ? '⭐' : '☆'}}
+        </text>
+        <text class="detail-link">点击查看详细步骤 →</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- Saved Recipes -->
+  <view class="saved-section" wx:if="{{showSaved}}">
+    <view wx:if="{{savedRecipes.length === 0}}" class="empty-state">
+      <text class="empty-icon">☆</text>
+      <text class="empty-text">还没有收藏的菜谱</text>
+    </view>
+    <view wx:for="{{savedRecipes}}" wx:key="index" class="saved-card"
+          data-index="{{index}}" bindtap="goSavedDetail">
+      <view class="saved-header">
+        <text class="saved-name">{{item.dish_name}}</text>
+        <text class="saved-star">⭐</text>
+      </view>
+      <text class="saved-steps">{{item.instructions}}</text>
+    </view>
+  </view>
+
+  <!-- Empty State -->
+  <view class="empty-state" wx:if="{{!showSaved && recipes.length === 0 && !loading}}">
+    <text class="empty-icon">🍳</text>
+    <text class="empty-text">选择人数和偏好，让 AI 帮你设计菜谱</text>
+    <text class="empty-sub">可勾选特定食材或开启严格模式</text>
+  </view>
+
+  <!-- Loading -->
+  <view class="loading" wx:if="{{loading}}">
+    <view class="loading-dot"></view><view class="loading-dot"></view><view class="loading-dot"></view>
+    <text class="loading-hint">AI 正在为你设计菜谱...</text>
+  </view>
+
+  <custom-tab-bar></custom-tab-bar>
+</view>

@@ -1,0 +1,132 @@
+.settings-page {
+  padding: 24rpx;
+  min-height: 100vh;
+  background: #F5F7FA;
+  padding-bottom: 140rpx;
+}
+
+.settings-section {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 28rpx 24rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.04);
+}
+.section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6rpx;
+}
+.section-desc {
+  font-size: 22rpx;
+  color: #BBB;
+  margin-bottom: 16rpx;
+}
+
+/* Token */
+.token-status {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  font-size: 24rpx;
+  color: #666;
+  margin-bottom: 14rpx;
+}
+.status-dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.status-dot.green { background: #52C41A; }
+.status-dot.red { background: #FF4D4F; }
+.status-toggle {
+  color: #4A90D9;
+  font-size: 22rpx;
+  margin-left: auto;
+}
+
+.token-input-wrap { margin-bottom: 14rpx; }
+.token-input {
+  background: #F5F7FA;
+  border-radius: 12rpx;
+  padding: 18rpx 20rpx;
+  font-size: 26rpx;
+  width: 100%;
+  box-sizing: border-box;
+  line-height: 1.4;
+  height: auto;
+  min-height: 56rpx;
+}
+
+.token-actions { display: flex; gap: 16rpx; margin-bottom: 12rpx; }
+.token-actions .btn {
+  padding: 16rpx !important;
+  border-radius: 32rpx;
+  font-size: 26rpx;
+}
+
+.test-ds-btn {
+  width: 100%;
+  margin-top: 8rpx;
+  padding: 14rpx !important;
+  border-radius: 32rpx;
+  font-size: 24rpx;
+  color: #4A90D9 !important;
+  border-color: #4A90D9 !important;
+}
+.token-howto {
+  padding: 12rpx;
+  font-size: 22rpx;
+  color: #BBB;
+  text-align: center;
+}
+
+/* Server Troubleshooting */
+.server-trouble {
+  background: #FFFBE6;
+  border-radius: 12rpx;
+  padding: 16rpx 20rpx;
+  margin-bottom: 16rpx;
+}
+.server-trouble text {
+  display: block;
+  font-size: 22rpx;
+  color: #8B6914;
+  line-height: 1.7;
+}
+.server-trouble text:first-child { font-weight: 500; margin-bottom: 2rpx; }
+
+/* Server */
+.input-row {
+  display: flex;
+  gap: 12rpx;
+  margin-bottom: 12rpx;
+}
+.server-input {
+  flex: 1;
+  background: #F5F7FA;
+  border-radius: 12rpx;
+  padding: 16rpx 20rpx;
+  font-size: 26rpx;
+  line-height: 1.4;
+  height: auto;
+  min-height: 56rpx;
+}
+.server-hint {
+  display: flex;
+  justify-content: space-between;
+  font-size: 22rpx;
+  color: #BBB;
+}
+.conn-btn { color: #4A90D9; }
+
+/* About */
+.about-text { padding: 8rpx 0; }
+.about-text text {
+  display: block;
+  font-size: 26rpx;
+  color: #999;
+  line-height: 2;
+}

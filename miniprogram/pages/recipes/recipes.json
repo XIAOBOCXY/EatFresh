@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "智能菜谱",
+  "usingComponents": {
+    "custom-tab-bar": "/components/custom-tab-bar/index"
+  }
+}

@@ -1,0 +1,215 @@
+/* Detail Page Styles */
+.detail-page {
+  min-height: 100vh;
+  background: #F5F7FA;
+  padding-bottom: 40rpx;
+}
+.detail-loading {
+  padding-top: 200rpx;
+}
+
+/* Detail Hero */
+.detail-hero {
+  text-align: center;
+  padding: 40rpx 24rpx 32rpx;
+  background: #fff;
+  margin-bottom: 16rpx;
+}
+.detail-hero.status-expired { background: linear-gradient(180deg, #FAFAFA, #fff); }
+.hero-emoji {
+  font-size: 100rpx;
+  display: block;
+}
+.hero-name {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #333;
+  display: block;
+  margin-top: 8rpx;
+}
+.detail-hero .badge {
+  margin-top: 12rpx;
+  display: inline-block;
+}
+
+/* Info Card */
+.detail-card {
+  background: #fff;
+  margin: 0 24rpx;
+  border-radius: 20rpx;
+  padding: 8rpx 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.04);
+}
+.detail-card .info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #F5F5F5;
+}
+.detail-card .info-row:last-child { border-bottom: none; }
+.detail-card .info-label {
+  font-size: 28rpx;
+  color: #888;
+}
+.detail-card .info-value {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+}
+.freshness-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+.freshness-bar {
+  width: 160rpx;
+  height: 10rpx;
+  background: #EEE;
+  border-radius: 5rpx;
+  overflow: hidden;
+}
+.freshness-fill { height: 100%; border-radius: 5rpx; }
+.freshness-fill.status-fresh { background: #52C41A; }
+.freshness-fill.status-warning { background: #FAAD14; }
+.freshness-fill.status-urgent { background: #FF4D4F; }
+.freshness-fill.status-expired { background: #999; }
+.freshness-pct { font-size: 24rpx; color: #888; }
+
+/* Actions */
+.detail-actions {
+  display: flex;
+  gap: 24rpx;
+  padding: 24rpx;
+}
+.detail-actions .btn {
+  padding: 22rpx;
+  border-radius: 44rpx;
+  font-size: 28rpx;
+}
+.delete-link {
+  text-align: center;
+  padding: 16rpx;
+  color: #CCC;
+  font-size: 24rpx;
+}
+.delete-link:active { color: #FF4D4F; }
+
+/* Edit Form */
+.edit-card {
+  background: #fff;
+  margin: 16rpx 24rpx;
+  border-radius: 20rpx;
+  padding: 8rpx 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.04);
+}
+.form-group {
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #F5F5F5;
+}
+.form-group:last-child { border-bottom: none; }
+.form-label {
+  font-size: 26rpx;
+  color: #888;
+  display: block;
+  margin-bottom: 8rpx;
+}
+.form-input {
+  font-size: 30rpx;
+  color: #333;
+  padding: 8rpx 0;
+  width: 100%;
+}
+.form-picker {
+  font-size: 30rpx;
+  color: #333;
+  padding: 8rpx 0;
+}
+.form-row {
+  display: flex;
+  gap: 24rpx;
+}
+.form-row .form-group { border-bottom: 1rpx solid #F5F5F5; }
+
+/* ── Waste Modal ── */
+.modal-mask {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.waste-modal {
+  background: #fff;
+  border-radius: 24rpx;
+  width: 600rpx;
+  padding: 32rpx;
+}
+.waste-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 12rpx;
+}
+.waste-ing-info {
+  text-align: center;
+  font-size: 26rpx;
+  color: #888;
+  margin-bottom: 20rpx;
+}
+.waste-slider-wrap {
+  margin-bottom: 16rpx;
+}
+.waste-pct-label {
+  font-size: 28rpx;
+  color: #FF4D4F;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 4rpx;
+}
+.waste-qty-row {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 16rpx;
+  padding: 12rpx 16rpx;
+  background: #F5F7FA;
+  border-radius: 12rpx;
+}
+.waste-qty-label { font-size: 26rpx; color: #666; }
+.waste-qty-input {
+  flex: 1;
+  font-size: 28rpx;
+  text-align: center;
+  background: #fff;
+  border-radius: 8rpx;
+  padding: 8rpx;
+}
+.waste-qty-unit { font-size: 26rpx; color: #666; }
+
+.waste-reason-row {
+  margin-bottom: 20rpx;
+}
+.waste-reason-label {
+  font-size: 26rpx;
+  color: #666;
+  display: block;
+  margin-bottom: 8rpx;
+}
+.waste-radio {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 20rpx;
+  font-size: 24rpx;
+  color: #555;
+}
+.waste-modal-actions {
+  display: flex;
+  gap: 20rpx;
+}
+.waste-modal-actions .btn {
+  padding: 20rpx;
+  border-radius: 40rpx;
+}

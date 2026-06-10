@@ -1,0 +1,102 @@
+.rd-page {
+  min-height: 100vh;
+  background: #F5F7FA;
+  padding-bottom: 80rpx;
+}
+
+.rd-hero {
+  background: linear-gradient(135deg, #4A90D9, #357ABD);
+  padding: 48rpx 32rpx;
+  text-align: center;
+  color: #fff;
+}
+.rd-icon { font-size: 80rpx; display: block; }
+.rd-name {
+  font-size: 38rpx;
+  font-weight: 700;
+  display: block;
+  margin-top: 12rpx;
+}
+.rd-meta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20rpx;
+  margin-top: 20rpx;
+}
+.rd-tag {
+  font-size: 24rpx;
+  background: rgba(255,255,255,0.25);
+  padding: 8rpx 24rpx;
+  border-radius: 20rpx;
+  line-height: 1.4;
+  display: inline-flex;
+  align-items: center;
+}
+.rd-tag.saved { color: #FFD700; }
+
+.rd-section {
+  background: #fff;
+  margin: 16rpx 24rpx;
+  border-radius: 20rpx;
+  padding: 28rpx 24rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.04);
+}
+.rd-section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 18rpx;
+}
+
+.rd-ing-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+.rd-ing {
+  padding: 10rpx 20rpx;
+  border-radius: 20rpx;
+  font-size: 26rpx;
+}
+.rd-ing.have { background: #F6FFED; color: #333; }
+.rd-ing.missing { background: #FFF1F0; color: #333; }
+
+.rd-steps {
+  background: #FAFAFA;
+  border-radius: 14rpx;
+  padding: 24rpx;
+}
+.rd-steps-text {
+  font-size: 28rpx;
+  color: #555;
+  line-height: 2;
+  white-space: pre-wrap;
+}
+
+.rd-tips {
+  background: #FFFBE6;
+  border-radius: 14rpx;
+  padding: 18rpx 22rpx;
+  font-size: 26rpx;
+  color: #8B6914;
+  line-height: 1.7;
+}
+
+.rd-actions {
+  padding: 28rpx 24rpx;
+  text-align: center;
+}
+.cook-btn {
+  width: 80%;
+  padding: 26rpx;
+  border-radius: 48rpx;
+  font-size: 30rpx;
+  margin: 0 auto;
+}
+.cook-hint {
+  display: block;
+  font-size: 24rpx;
+  color: #BBB;
+  margin-top: 14rpx;
+}

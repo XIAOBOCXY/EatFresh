@@ -1,0 +1,106 @@
+<view class="page-container stats-page">
+
+  <!-- Tab Toggle -->
+  <view class="stats-tabs">
+    <view class="stats-tab {{showTab === 'waste' ? 'active' : ''}}" data-tab="waste" bindtap="switchTab">浪费统计</view>
+    <view class="stats-tab {{showTab === 'cooking' ? 'active' : ''}}" data-tab="cooking" bindtap="switchTab">做菜记录</view>
+  </view>
+
+  <!-- ═══ Waste Stats ═══ -->
+  <block wx:if="{{showTab === 'waste'}}">
+    <block wx:if="{{!loading && stats}}">
+      <view class="overview-cards">
+        <view class="overview-card">
+          <text class="overview-num">{{stats.total_count || 0}}</text>
+          <text class="overview-label">浪费次数</text>
+        </view>
+        <view class="overview-card">
+          <text class="overview-num">{{stats.total_quantity || 0}}</text>
+          <text class="overview-label">浪费总量</text>
+        </view>
+      </view>
+
+      <view class="stats-section" wx:if="{{stats.by_reason.length > 0}}">
+        <view class="section-title">浪费原因分布</view>
+        <view class="heatmap">
+          <view wx:for="{{stats.by_reason}}" wx:key="reason" class="heat-row">
+            <text class="heat-label">{{item.reason}}</text>
+            <view class="heat-bar-wrap">
+              <view class="heat-bar" style="width:{{item.barWidth}}%;"></view>
+            </view>
+            <text class="heat-val">{{item.total_qty}}</text>
+            <text class="heat-pct">{{item.pct}}%</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="stats-section" wx:if="{{stats.most_wasted.length > 0}}">
+        <view class="section-title">最多浪费食材 TOP5</view>
+        <view wx:for="{{stats.most_wasted}}" wx:key="ingredient_name" wx:if="{{index < 5}}" class="top-row">
+          <text class="top-rank">#{{index + 1}}</text>
+          <text class="top-name">{{item.ingredient_name}}</text>
+          <text class="top-info">×{{item.total_qty}} ({{item.times}}次)</text>
+        </view>
+      </view>
+
+      <view class="stats-section" wx:if="{{stats.recent.length > 0}}">
+        <view class="section-title">最近记录</view>
+        <view wx:for="{{stats.recent.slice(0, 10)}}" wx:key="id" class="recent-row">
+          <text class="recent-name">{{item.ingredient_name}}</text>
+          <text class="recent-detail">{{item.quantity}}{{item.unit}} · {{item.reason}}</text>
+          <text class="recent-date">{{item.waste_date}}</text>
+        </view>
+      </view>
+    </block>
+
+    <view class="empty-state" wx:if="{{!loading && (!stats || stats.total_count === 0)}}">
+      <text class="empty-icon">♻️</text>
+      <text class="empty-text">还没有浪费记录</text>
+      <text class="empty-sub">珍惜粮食，从你我做起</text>
+    </view>
+  </block>
+
+  <!-- ═══ Cooking Stats ═══ -->
+  <block wx:if="{{showTab === 'cooking'}}">
+    <block wx:if="{{cookingStats && cookingStats.total > 0}}">
+      <view class="overview-cards">
+        <view class="overview-card" style="background:linear-gradient(135deg,#52C41A,#389E0D);box-shadow:0 4rpx 16rpx rgba(82,196,26,0.25);">
+          <text class="overview-num">{{cookingStats.total}}</text>
+          <text class="overview-label">做菜总次数</text>
+        </view>
+        <view class="overview-card" style="background:linear-gradient(135deg,#FAAD14,#D48806);box-shadow:0 4rpx 16rpx rgba(250,173,20,0.25);">
+          <text class="overview-num">{{cookingStats.dishes.length}}</text>
+          <text class="overview-label">不同菜品数</text>
+        </view>
+      </view>
+
+      <view class="stats-section" wx:if="{{cookingStats.dishes.length > 0}}">
+        <view class="section-title">最爱做的菜</view>
+        <view wx:for="{{cookingStats.dishes}}" wx:key="name" class="top-row">
+          <text class="top-rank">{{index === 0 ? '👑' : '#' + (index + 1)}}</text>
+          <text class="top-name">{{item.name}}</text>
+          <text class="top-info">{{item.count}}次</text>
+        </view>
+      </view>
+
+      <view class="stats-section" wx:if="{{cookingStats.ingredients.length > 0}}">
+        <view class="section-title">最爱用的食材</view>
+        <view wx:for="{{cookingStats.ingredients}}" wx:key="name" wx:if="{{index < 10}}" class="top-row">
+          <text class="top-rank">#{{index + 1}}</text>
+          <text class="top-name">{{item.name}}</text>
+          <view class="mini-bar-wrap">
+            <view class="mini-bar" style="width:{{item.barWidth}}%"></view>
+          </view>
+          <text class="top-info">{{item.count}}次</text>
+        </view>
+      </view>
+    </block>
+
+    <view class="empty-state" wx:if="{{!cookingStats || cookingStats.total === 0}}">
+      <text class="empty-icon">🍳</text>
+      <text class="empty-text">还没有做菜记录</text>
+      <text class="empty-sub">去菜谱页做一道菜试试吧</text>
+    </view>
+  </block>
+
+</view>

@@ -1,0 +1,62 @@
+<view class="page-container list-page">
+  <!-- Search bar -->
+  <view class="search-bar">
+    <view class="search-input-wrap" wx:if="{{showSearch}}">
+      <input class="search-input" placeholder="搜索食材..." value="{{searchText}}"
+             bindinput="onSearchInput" bindconfirm="onSearchConfirm" focus/>
+      <text class="search-close" bindtap="toggleSearch">✕</text>
+    </view>
+    <view class="search-icons" wx:else>
+      <text class="search-icon-btn" bindtap="toggleSearch">🔍</text>
+      <text class="search-icon-btn" bindtap="goAdd">➕</text>
+    </view>
+  </view>
+
+  <!-- Category Filter -->
+  <scroll-view class="cat-filter" scroll-x>
+    <view wx:for="{{categories}}" wx:key="*this"
+      class="cat-chip {{activeCategory === item ? 'active' : ''}}"
+      data-cat="{{item}}" bindtap="onCategoryTap">{{item}}</view>
+  </scroll-view>
+
+  <!-- Ingredient List -->
+  <view class="ingredient-list" wx:if="{{!loading && ingredients.length > 0}}">
+    <view wx:for="{{ingredients}}" wx:key="id"
+      class="ingredient-row"
+      data-id="{{item.id}}" bindtap="goDetail"
+    >
+      <view class="row-emoji-wrap status-{{item.status}}">
+        <text class="row-emoji">{{item.emoji}}</text>
+      </view>
+      <view class="row-info">
+        <text class="row-name">{{item.name}}</text>
+        <text class="row-meta">{{item.quantity}}{{item.unit}} · {{item.category}}</text>
+      </view>
+      <view class="row-right">
+        <view class="badge badge-{{item.status}}">
+          {{item.status === 'expired' ? '已过期' : item.status === 'urgent' ? '即将过期' : item.status === 'warning' ? '尽快食用' : '新鲜'}}
+        </view>
+        <text class="row-expiry">{{item.days_remaining < 0 ? '过期' + (-item.days_remaining) + '天' : item.days_remaining + '天后过期'}}</text>
+      </view>
+      <view class="row-delete" catchtap="deleteItem" data-id="{{item.id}}" data-name="{{item.name}}">
+        <text>🗑️</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- Empty State -->
+  <view class="empty-state" wx:if="{{!loading && ingredients.length === 0}}">
+    <text class="empty-icon">📭</text>
+    <text class="empty-text">还没有食材</text>
+    <text class="empty-sub" bindtap="goAdd">点击这里添加 →</text>
+  </view>
+
+  <!-- Loading -->
+  <view class="loading" wx:if="{{loading}}">
+    <view class="loading-dot"></view>
+    <view class="loading-dot"></view>
+    <view class="loading-dot"></view>
+  </view>
+
+  <custom-tab-bar></custom-tab-bar>
+</view>

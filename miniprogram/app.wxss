@@ -1,0 +1,153 @@
+/* AI Fridge Manager — Global Styles */
+page {
+  --primary: #4A90D9;
+  --success: #52C41A;
+  --warning: #FAAD14;
+  --danger: #FF4D4F;
+  --bg: #F5F7FA;
+  --card: #FFFFFF;
+  --text: #333333;
+  --text-secondary: #888888;
+  --text-light: #BBBBBB;
+  --border: #EEEEEE;
+  --shadow: 0 2rpx 12rpx rgba(0,0,0,0.06);
+  --radius: 16rpx;
+
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 28rpx;
+  color: var(--text);
+  background-color: var(--bg);
+  box-sizing: border-box;
+}
+
+/* Reset */
+view, text, image, scroll-view, input, button {
+  box-sizing: border-box;
+}
+
+/* Flex utilities */
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; }
+.flex-1 { flex: 1; }
+.flex-wrap { flex-wrap: wrap; }
+
+/* Spacing */
+.p-20 { padding: 20rpx; }
+.p-30 { padding: 30rpx; }
+.mt-20 { margin-top: 20rpx; }
+.mb-20 { margin-bottom: 20rpx; }
+.gap-20 { gap: 20rpx; }
+
+/* Card */
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24rpx;
+}
+
+/* Text */
+.text-sm { font-size: 24rpx; }
+.text-lg { font-size: 32rpx; }
+.text-xl { font-size: 36rpx; }
+.text-center { text-align: center; }
+.text-secondary { color: var(--text-secondary); }
+.text-light { color: var(--text-light); }
+.text-primary { color: var(--primary); }
+.text-danger { color: var(--danger); }
+.text-warning { color: var(--warning); }
+.text-success { color: var(--success); }
+
+/* Buttons */
+.btn {
+  padding: 20rpx 40rpx;
+  border-radius: 40rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+}
+.btn-primary:active { opacity: 0.85; }
+.btn-outline {
+  border: 2rpx solid var(--primary);
+  color: var(--primary);
+  background: transparent;
+}
+.btn-danger {
+  background: var(--danger);
+  color: #fff;
+}
+.btn-sm {
+  padding: 12rpx 24rpx;
+  font-size: 24rpx;
+}
+
+/* Status badges */
+.badge {
+  padding: 6rpx 18rpx;
+  border-radius: 20rpx;
+  font-size: 22rpx;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.4;
+}
+.badge-fresh { background: #E8F8E0; color: var(--success); }
+.badge-warning { background: #FFF7E0; color: var(--warning); }
+.badge-urgent { background: #FFE8E8; color: var(--danger); }
+.badge-expired { background: #F0F0F0; color: #999; }
+
+/* Empty state */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100rpx 40rpx;
+}
+.empty-state .empty-icon {
+  font-size: 120rpx;
+  opacity: 0.5;
+  margin-bottom: 24rpx;
+}
+.empty-state .empty-text {
+  font-size: 28rpx;
+  color: var(--text-secondary);
+}
+
+/* Loading spinner */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60rpx;
+}
+.loading-dot {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  background: var(--primary);
+  margin: 0 8rpx;
+  animation: bounce 0.6s infinite alternate;
+}
+.loading-dot:nth-child(2) { animation-delay: 0.2s; }
+.loading-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes bounce {
+  to { transform: translateY(-16rpx); opacity: 0.5; }
+}
+
+/* Page container */
+.page-container {
+  min-height: 100vh;
+  padding-bottom: 20rpx;
+}

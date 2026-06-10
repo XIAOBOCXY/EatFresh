@@ -1,0 +1,131 @@
+<view class="page-container detail-page">
+
+  <view class="detail-loading" wx:if="{{loading}}">
+    <view class="loading"><view class="loading-dot"></view><view class="loading-dot"></view><view class="loading-dot"></view></view>
+  </view>
+
+  <block wx:if="{{!loading && ingredient}}">
+    <!-- View Mode -->
+    <view class="detail-content" wx:if="{{!isEditing}}">
+      <view class="detail-hero status-{{ingredient.status}}">
+        <text class="hero-emoji">{{ingredient.emoji}}</text>
+        <text class="hero-name">{{ingredient.name}}</text>
+        <view class="badge badge-{{ingredient.status}}">{{ingredient.statusLabel}}</view>
+      </view>
+
+      <view class="detail-card">
+        <view class="info-row"><text class="info-label">分类</text><text class="info-value">{{ingredient.category}}</text></view>
+        <view class="info-row"><text class="info-label">数量</text><text class="info-value">{{ingredient.quantity}} {{ingredient.unit}}</text></view>
+        <view class="info-row">
+          <text class="info-label">新鲜度</text>
+          <view class="freshness-bar-wrap">
+            <view class="freshness-bar"><view class="freshness-fill status-{{ingredient.status}}" style="width:{{ingredient.freshness}}%"></view></view>
+            <text class="freshness-pct">{{ingredient.freshness}}%</text>
+          </view>
+        </view>
+        <view class="info-row"><text class="info-label">购买日期</text><text class="info-value">{{ingredient.purchase_date}}</text></view>
+        <view class="info-row"><text class="info-label">过期日期</text><text class="info-value">{{ingredient.expiry_date}}</text></view>
+        <view class="info-row"><text class="info-label">剩余天数</text>
+          <text class="info-value {{ingredient.days_remaining < 0 ? 'text-danger' : ingredient.days_remaining <= 3 ? 'text-warning' : 'text-success'}}">
+            {{ingredient.days_remaining < 0 ? '已过期 ' + (-ingredient.days_remaining) + ' 天' : '还有 ' + ingredient.days_remaining + ' 天'}}
+          </text>
+        </view>
+        <view class="info-row" wx:if="{{ingredient.notes}}"><text class="info-label">备注</text><text class="info-value">{{ingredient.notes}}</text></view>
+      </view>
+
+      <view class="detail-actions">
+        <button class="btn btn-primary flex-1" bindtap="startEdit">✏️ 编辑</button>
+        <button class="btn btn-outline flex-1" style="color:#FF4D4F;border-color:#FF4D4F;" bindtap="showWasteModal">使用</button>
+      </view>
+      <view class="delete-link" bindtap="deleteItem">删除此食材</view>
+    </view>
+
+    <!-- Partial Waste Modal -->
+    <view class="modal-mask" wx:if="{{showWasteModal}}" catchtap="closeWasteModal">
+      <view class="waste-modal" catchtap="preventBubble">
+        <view class="waste-title">用掉多少？</view>
+        <view class="waste-ing-info" wx:if="{{ingredient}}">
+          <text>{{ingredient.emoji}} {{ingredient.name}} (共{{ingredient.quantity}}{{ingredient.unit}})</text>
+        </view>
+
+        <view class="waste-slider-wrap">
+          <text class="waste-pct-label">用掉 {{wastePercent}}%</text>
+          <slider min="1" max="100" value="{{wastePercent}}" block-size="24"
+                  activeColor="#FF4D4F" backgroundColor="#EEE"
+                  bindchange="onWasteSliderChange"/>
+        </view>
+
+        <view class="waste-qty-row">
+          <text class="waste-qty-label">用掉数量:</text>
+          <input class="waste-qty-input" type="{{isCountUnit ? 'number' : 'digit'}}"
+                 value="{{wasteQty}}" bindinput="onWasteQtyInput"/>
+          <text class="waste-qty-unit">{{ingredient.unit}}</text>
+        </view>
+
+        <view class="waste-reason-row">
+          <text class="waste-reason-label">原因:</text>
+          <radio-group bindchange="onWasteReasonChange">
+            <label class="waste-radio" wx:for="{{['吃完了','过期','变质','其他']}}" wx:key="*this">
+              <radio value="{{item}}" checked="{{wasteReason === item}}"/>{{item}}
+            </label>
+          </radio-group>
+        </view>
+
+        <view class="waste-modal-actions">
+          <button class="btn btn-outline flex-1" bindtap="closeWasteModal">取消</button>
+          <button class="btn btn-primary flex-1" style="background:#FF4D4F;" bindtap="confirmWaste">确认</button>
+        </view>
+      </view>
+    </view>
+
+    <!-- Edit Mode -->
+    <view class="edit-content" wx:if="{{isEditing}}">
+      <view class="edit-card">
+        <view class="form-group">
+          <text class="form-label">名称</text>
+          <input class="form-input" value="{{editForm.name}}" data-field="name" bindinput="onFormChange"/>
+        </view>
+        <view class="form-group">
+          <text class="form-label">Emoji</text>
+          <input class="form-input" value="{{editForm.emoji}}" data-field="emoji" bindinput="onFormChange"/>
+        </view>
+        <view class="form-group">
+          <text class="form-label">分类</text>
+          <picker mode="selector" range="{{categories}}" value="{{categoryIndex}}" bindchange="onCategoryChange">
+            <view class="form-picker">{{editForm.category}}</view>
+          </picker>
+        </view>
+        <view class="form-row">
+          <view class="form-group flex-1">
+            <text class="form-label">数量</text>
+            <input class="form-input" type="digit" value="{{editForm.quantity}}" data-field="quantity" bindinput="onFormChange"/>
+          </view>
+          <view class="form-group flex-1">
+            <text class="form-label">单位</text>
+            <input class="form-input" value="{{editForm.unit}}" data-field="unit" bindinput="onFormChange"/>
+          </view>
+        </view>
+        <view class="form-group">
+          <text class="form-label">购买日期</text>
+          <picker mode="date" value="{{editForm.purchase_date}}" bindchange="onFormChange" data-field="purchase_date">
+            <view class="form-picker">{{editForm.purchase_date}}</view>
+          </picker>
+        </view>
+        <view class="form-group">
+          <text class="form-label">过期日期</text>
+          <picker mode="date" value="{{editForm.expiry_date}}" bindchange="onFormChange" data-field="expiry_date">
+            <view class="form-picker">{{editForm.expiry_date}}</view>
+          </picker>
+        </view>
+        <view class="form-group">
+          <text class="form-label">备注</text>
+          <input class="form-input" value="{{editForm.notes}}" data-field="notes" bindinput="onFormChange" placeholder="可选备注"/>
+        </view>
+      </view>
+      <view class="detail-actions">
+        <button class="btn btn-outline flex-1" bindtap="cancelEdit">取消</button>
+        <button class="btn btn-primary flex-1" bindtap="saveEdit">保存</button>
+      </view>
+    </view>
+  </block>
+</view>

@@ -1,0 +1,57 @@
+<view class="page-container rd-page" wx:if="{{recipe}}">
+
+  <!-- Hero -->
+  <view class="rd-hero">
+    <text class="rd-icon">🍽️</text>
+    <text class="rd-name">{{recipe.dish_name}}</text>
+    <view class="rd-meta">
+      <text class="rd-tag" wx:if="{{recipe.difficulty}}">{{recipe.difficulty}}</text>
+      <text class="rd-tag {{recipe.isSaved ? 'saved' : ''}}" bindtap="toggleSave">
+        {{recipe.isSaved ? '⭐ 已收藏' : '☆ 收藏'}}
+      </text>
+    </view>
+  </view>
+
+  <!-- Ingredients -->
+  <view class="rd-section">
+    <view class="rd-section-title">🥬 所需食材</view>
+    <view class="rd-ing-list">
+      <view wx:for="{{recipe.used_ingredients}}" wx:key="name" class="rd-ing have">
+        <text>{{item.emoji}} {{item.name}} ✅</text>
+      </view>
+      <view wx:for="{{recipe.missing_ingredients}}" wx:key="name" class="rd-ing missing">
+        <text>{{item.emoji}} {{item.name}} · 需购买</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- Instructions -->
+  <view class="rd-section" wx:if="{{recipe.instructions}}">
+    <view class="rd-section-title">📝 详细步骤（小白也能做）</view>
+    <view class="rd-steps">
+      <text class="rd-steps-text">{{recipe.instructions}}</text>
+    </view>
+  </view>
+
+  <!-- Tips -->
+  <view class="rd-section" wx:if="{{recipe.tips}}">
+    <view class="rd-section-title">💡 烹饪贴士</view>
+    <view class="rd-tips"><text>{{recipe.tips}}</text></view>
+  </view>
+
+  <!-- Cook Button -->
+  <view class="rd-actions">
+    <button class="btn btn-primary cook-btn" bindtap="cookDish">
+      我做完了，更新库存
+    </button>
+    <text class="cook-hint">点击后将从库存中自动扣除所用食材</text>
+  </view>
+
+</view>
+
+<view class="page-container" wx:else>
+  <view class="empty-state">
+    <text class="empty-icon">🍽️</text>
+    <text class="empty-text">菜谱数据加载失败</text>
+  </view>
+</view>

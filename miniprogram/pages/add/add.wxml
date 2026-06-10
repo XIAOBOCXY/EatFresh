@@ -1,0 +1,146 @@
+<view class="page-container add-page">
+
+  <!-- Mode Tabs -->
+  <view class="mode-tabs">
+    <view class="mode-tab {{mode === 'chat' ? 'active' : ''}}" data-mode="chat" bindtap="switchMode">
+      <text>💬 智能输入</text>
+    </view>
+    <view class="mode-tab {{mode === 'tags' ? 'active' : ''}}" data-mode="tags" bindtap="switchMode">
+      <text>🏷️ 快速选择</text>
+    </view>
+  </view>
+
+  <!-- ═══ CHAT MODE ═══ -->
+  <view class="chat-mode" wx:if="{{mode === 'chat'}}">
+
+    <!-- Parsed Items -->
+    <view class="parsed-list" wx:if="{{parsedItems.length > 0}}">
+      <view class="parsed-header">
+        <text class="parsed-title">🤖 AI 理解了你的输入:</text>
+      </view>
+      <view wx:for="{{parsedItems}}" wx:key="index" class="parsed-card">
+        <view class="parsed-main">
+          <text class="parsed-emoji">{{item.emoji}}</text>
+          <view class="parsed-info">
+            <text class="parsed-name">{{item.name}}</text>
+            <text class="parsed-meta">{{item.quantity}}{{item.unit}} · {{item.typical_expiry_days}}天后过期</text>
+          </view>
+          <text class="parsed-remove" data-index="{{index}}" bindtap="removeParsedItem">✕</text>
+        </view>
+        <view class="parsed-actions">
+          <text class="parsed-edit" data-index="{{index}}" bindtap="editParsedItem">✏️ 改名称</text>
+          <text class="parsed-edit" data-index="{{index}}" bindtap="editParsedQty">📐 改数量</text>
+          <text class="parsed-edit" data-index="{{index}}" bindtap="editParsedExpiry">📅 改保质期</text>
+        </view>
+      </view>
+      <button class="btn btn-primary confirm-btn" bindtap="confirmParsedItems">
+        确认入库 ({{parsedItems.length}}件)
+      </button>
+    </view>
+
+    <!-- Chat History -->
+    <view class="chat-area">
+      <view class="chat-hint" wx:if="{{parsedItems.length === 0 && !isProcessing}}">
+        <text class="hint-icon">💬</text>
+        <text class="hint-title">告诉我你买了什么</text>
+        <text class="hint-examples">例如：</text>
+        <text class="hint-example">"今天买了三个番茄、两斤排骨、一盒牛奶"</text>
+        <text class="hint-example">"冰箱里放了半斤牛肉，还有一把青菜"</text>
+        <text class="hint-example">"刚买了一打鸡蛋和一块豆腐"</text>
+      </view>
+
+      <view class="chat-loading" wx:if="{{isProcessing}}">
+        <view class="loading">
+          <view class="loading-dot"></view>
+          <view class="loading-dot"></view>
+          <view class="loading-dot"></view>
+        </view>
+        <text class="loading-text">AI 正在理解你的描述...</text>
+      </view>
+    </view>
+
+    <!-- Input Bar -->
+    <view class="chat-input-bar">
+      <input
+        class="chat-input"
+        placeholder="比如：今天买了三个番茄..."
+        value="{{inputText}}"
+        bindinput="onInputChange"
+        confirm-type="send"
+        bindconfirm="sendText"
+      />
+      <button class="send-btn" bindtap="sendText" disabled="{{isProcessing || !canSend}}">
+        <text>发送</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- ═══ TAG MODE ═══ -->
+  <view class="tag-mode" wx:if="{{mode === 'tags'}}">
+    <!-- Category Tabs -->
+    <scroll-view class="cat-tabs" scroll-x>
+      <view
+        wx:for="{{presetCategories}}"
+        wx:key="*this"
+        class="cat-tab {{activeCategory === item ? 'active' : ''}}"
+        data-cat="{{item}}"
+        bindtap="onCategoryTap"
+      >{{item}}</view>
+    </scroll-view>
+
+    <!-- Tag Grid -->
+    <view class="tag-grid" wx:if="{{activeCategory}}">
+      <view
+        wx:for="{{presets[activeCategory]}}"
+        wx:key="name"
+        class="tag-item"
+        data-item="{{item}}"
+        bindtap="onTagTap"
+      >
+        <text class="tag-emoji">{{item.emoji}}</text>
+        <text class="tag-name">{{item.name}}</text>
+        <text class="tag-expiry">{{item.expiry_days}}天</text>
+      </view>
+    </view>
+
+    <!-- Selected Tags -->
+    <view class="selected-section" wx:if="{{selectedTags.length > 0}}">
+      <view class="selected-header">已选择:</view>
+      <view class="selected-tags">
+        <view wx:for="{{selectedTags}}" wx:key="name" class="selected-tag">
+          <text>{{item.emoji}} {{item.name}} ×{{item.quantity}}{{item.unit}}</text>
+          <text class="selected-remove" data-index="{{index}}" bindtap="removeTagItem">✕</text>
+        </view>
+      </view>
+      <button class="btn btn-primary confirm-btn" bindtap="confirmTagItems">
+        批量入库 ({{selectedTags.length}}件)
+      </button>
+    </view>
+  </view>
+
+  <!-- ═══ Tag Quantity Modal ═══ -->
+  <view class="modal-mask" wx:if="{{showTagModal}}" catchtap="closeTagModal">
+    <view class="tag-modal" catchtap="preventBubble">
+      <view class="tag-modal-header" wx:if="{{tagModalItem}}">
+        <text class="tag-modal-emoji">{{tagModalItem.emoji}}</text>
+        <text class="tag-modal-name">{{tagModalItem.name}}</text>
+      </view>
+      <view class="tag-modal-body">
+        <view class="form-group">
+          <text class="form-label">数量</text>
+          <input class="form-input" type="digit" value="{{tagQty}}" bindinput="onTagQtyChange"/>
+          <text class="form-label">{{tagUnit}}</text>
+        </view>
+        <view class="form-group">
+          <text class="form-label">保质期</text>
+          <input class="form-input" type="number" value="{{tagExpiryDays}}" bindinput="onTagExpiryChange"/>
+          <text class="form-label">天</text>
+        </view>
+      </view>
+      <view class="tag-modal-footer">
+        <button class="btn btn-outline flex-1" bindtap="closeTagModal">取消</button>
+        <button class="btn btn-primary flex-1" bindtap="addTagItem">加入</button>
+      </view>
+    </view>
+  </view>
+</view>

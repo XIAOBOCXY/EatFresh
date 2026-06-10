@@ -1,0 +1,113 @@
+<view class="page-container fridge-page">
+
+  <!-- Smart Tips Banner -->
+  <view class="tips-banner" wx:if="{{tipList.length > 0}}">
+    <text class="tips-icon">💡</text>
+    <text class="tips-text">{{tipList[tipIndex]}}</text>
+    <view class="tips-dots" wx:if="{{tipList.length > 1}}">
+      <view wx:for="{{tipList}}" wx:key="index"
+        class="dot {{index === tipIndex ? 'active' : ''}}"></view>
+    </view>
+  </view>
+
+  <!-- Fridge Body -->
+  <view class="fridge-wrapper">
+    <view class="fridge">
+      <view class="fridge-freezer"><view class="fridge-handle"></view></view>
+      <view class="fridge-body">
+        <view class="shelf" style="top: 30%;"></view>
+        <view class="shelf" style="top: 55%;"></view>
+        <view class="shelf" style="top: 78%;"></view>
+        <view class="fridge-light"></view>
+
+        <!-- Ingredient cards -->
+        <block wx:if="{{!loading && ingredients.length > 0}}">
+          <view wx:for="{{ingredients}}" wx:key="id"
+            class="ingredient-card"
+            style="left: {{item._x || item.posX}}%; top: {{item._y || item.posY}}%; transform: rotate({{item.rotate}}deg) scale({{item.scale}});"
+            data-id="{{item.id}}"
+            bindtap="onIngredientTap"
+            bindtouchstart="onTouchStart"
+            bindtouchmove="onTouchMove"
+            bindtouchend="onTouchEnd">
+            <view class="freshness-ring status-{{item.status}}">
+              <view class="emoji-wrap"><text class="ingredient-emoji">{{item.emoji}}</text></view>
+            </view>
+            <view class="ingredient-name">{{item.name}}</view>
+            <view class="ingredient-qty">{{item.quantity}}{{item.unit}}</view>
+          </view>
+        </block>
+
+        <!-- Status -->
+        <view class="fridge-status" wx:if="{{ingredients.length === 0}}">
+          <text class="status-icon">{{loading ? '⏳' : loadError ? '⚠️' : '🧊'}}</text>
+          <text class="status-text">{{loading ? '加载中...' : loadError ? '连接失败' : '冰箱空空的'}}</text>
+          <text class="status-sub" wx:if="{{!loading && !loadError}}">点击下方按钮添加食材吧</text>
+          <text class="status-sub" wx:if="{{loadError}}" bindtap="loadData" style="color:#4A90D9;">请确保后端已启动，点击重试</text>
+        </view>
+      </view>
+      <view class="fridge-legs"><view class="leg"></view><view class="leg"></view></view>
+    </view>
+  </view>
+
+  <!-- Action buttons -->
+  <view class="action-area">
+    <view class="action-btn add-btn" bindtap="goAdd">
+      <text class="action-icon">➕</text><text>添加食材</text>
+    </view>
+    <view class="action-row">
+      <view class="action-btn-sm" bindtap="goStats"><text>📊 统计</text></view>
+    </view>
+  </view>
+
+  <!-- Ingredient Detail Modal -->
+  <view class="modal-mask" wx:if="{{showDetail}}" bindtap="closeDetail">
+    <view class="modal-sheet" catchtap="preventBubble">
+      <view class="sheet-handle"></view>
+      <view class="detail-header" wx:if="{{selectedIngredient}}">
+        <view class="detail-emoji-wrap status-{{selectedIngredient.status}}">
+          <text class="detail-emoji">{{selectedIngredient.emoji}}</text>
+        </view>
+        <view class="detail-name">{{selectedIngredient.name}}</view>
+        <view class="detail-badge badge-{{selectedIngredient.status}}">
+          {{selectedIngredient.status === 'expired' ? '已过期' : selectedIngredient.status === 'urgent' ? '即将过期' : selectedIngredient.status === 'warning' ? '尽快食用' : '新鲜'}}
+        </view>
+      </view>
+      <view class="detail-info" wx:if="{{selectedIngredient}}">
+        <view class="info-row">
+          <text class="info-label">数量</text>
+          <text class="info-value">{{selectedIngredient.quantity}} {{selectedIngredient.unit}}</text>
+        </view>
+        <view class="info-row">
+          <text class="info-label">新鲜度</text>
+          <view class="freshness-bar-wrap">
+            <view class="freshness-bar">
+              <view class="freshness-fill status-{{selectedIngredient.status}}" style="width: {{selectedIngredient.freshness}}%;"></view>
+            </view>
+            <text class="freshness-pct">{{selectedIngredient.freshness}}%</text>
+          </view>
+        </view>
+        <view class="info-row">
+          <text class="info-label">购买日期</text>
+          <text class="info-value">{{selectedIngredient.purchase_date}}</text>
+        </view>
+        <view class="info-row">
+          <text class="info-label">过期日期</text>
+          <text class="info-value">{{selectedIngredient.expiry_date}}</text>
+        </view>
+        <view class="info-row">
+          <text class="info-label">剩余天数</text>
+          <text class="info-value {{selectedIngredient.days_remaining < 0 ? 'text-danger' : selectedIngredient.days_remaining <= 3 ? 'text-warning' : 'text-success'}}">
+            {{selectedIngredient.days_remaining < 0 ? '已过期 ' + (-selectedIngredient.days_remaining) + ' 天' : '还有 ' + selectedIngredient.days_remaining + ' 天'}}
+          </text>
+        </view>
+      </view>
+      <view class="detail-actions" wx:if="{{selectedIngredient}}">
+        <button class="btn btn-outline flex-1" bindtap="goEdit">✏️ 编辑</button>
+        <button class="btn btn-outline flex-1" style="color:#FF4D4F;border-color:#FF4D4F;" bindtap="markWaste">使用</button>
+      </view>
+    </view>
+  </view>
+
+  <custom-tab-bar></custom-tab-bar>
+</view>
