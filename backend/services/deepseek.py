@@ -44,7 +44,7 @@ def call_deepseek(api_token: str, system_prompt: str, user_message: str,
 
     try:
         resp = requests.post(DEEPSEEK_API_URL, headers=headers,
-                             json=payload, timeout=30)
+                             json=payload, timeout=120)
     except requests.exceptions.Timeout:
         raise ValueError("请求超时，请检查网络后重试")
     except requests.exceptions.ConnectionError:

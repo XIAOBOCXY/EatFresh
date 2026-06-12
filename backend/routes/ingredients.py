@@ -207,12 +207,13 @@ def delete_ingredient(ingredient_id):
         conn.close()
         return jsonify({"error": "食材不存在"}), 404
 
-    # Record as waste
     reason = request.args.get('reason', '已用完')
-    conn.execute('''
-        INSERT INTO waste_records (ingredient_name, quantity, unit, reason, waste_date)
-        VALUES (?, ?, ?, ?, ?)
-    ''', (row['name'], row['quantity'], row['unit'], reason, datetime.now().strftime('%Y-%m-%d')))
+    normal_use_reasons = {'已用于烹饪', '已用完', '正常使用', '吃完了', '吃完'}
+    if reason not in normal_use_reasons:
+        conn.execute('''
+            INSERT INTO waste_records (ingredient_name, quantity, unit, reason, waste_date)
+            VALUES (?, ?, ?, ?, ?)
+        ''', (row['name'], row['quantity'], row['unit'], reason, datetime.now().strftime('%Y-%m-%d')))
 
     conn.execute("DELETE FROM ingredients WHERE id = ?", (ingredient_id,))
     conn.commit()
@@ -233,10 +234,12 @@ def mark_as_waste(ingredient_id):
     waste_qty = data.get('quantity', row['quantity'])
     reason = data.get('reason', '过期')
 
-    conn.execute('''
-        INSERT INTO waste_records (ingredient_name, quantity, unit, reason, waste_date)
-        VALUES (?, ?, ?, ?, ?)
-    ''', (row['name'], waste_qty, row['unit'], reason, datetime.now().strftime('%Y-%m-%d')))
+    normal_use_reasons = {'已用于烹饪', '已用完', '正常使用', '吃完了', '吃完', '使用'}
+    if reason not in normal_use_reasons:
+      conn.execute('''
+          INSERT INTO waste_records (ingredient_name, quantity, unit, reason, waste_date)
+          VALUES (?, ?, ?, ?, ?)
+      ''', (row['name'], waste_qty, row['unit'], reason, datetime.now().strftime('%Y-%m-%d')))
 
     # Reduce or remove
     remaining = row['quantity'] - waste_qty

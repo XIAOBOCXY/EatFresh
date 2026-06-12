@@ -46,8 +46,8 @@ if __name__ == '__main__':
     print("=" * 50)
     print(f"  本机访问:     http://127.0.0.1:5000")
     if lan_ip:
-        print(f"  手机预览访问: http://{lan_ip}:5000")
-        print(f"  (在小程序设置中将后端地址改为上方地址)")
+        print(f"  局域网访问:   http://{lan_ip}:5000")
+        print(f"  (可在设置中填写此服务地址)")
     else:
         print(f"  (无法自动检测局域网IP, 请手动查看)")
     print(f"  Health check: http://127.0.0.1:5000/api/health")
